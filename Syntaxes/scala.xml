@@ -1,0 +1,27 @@
+<syntax name="scala">
+    <meta>
+        <name>Scala</name>
+        <type>compiled</type>
+        <preferred-file-extension>scala</preferred-file-extension>
+    </meta>
+    <tree-sitter>
+        <highlights />
+    </tree-sitter>
+    <scriptable shebang="##!/usr/bin/env -S scala-cli shebang" />
+    <detectors>
+        <extension priority="1.0">scala,sc</extension>
+    </detectors>
+    <!-- <comments>
+        <single>
+            <expression>//</expression>
+        </single>
+        <multiline>
+            <starts-with>
+                <expression>/*</expression>
+            </starts-with>
+            <ends-with>
+                <expression>*/</expression>
+            </ends-with>
+        </multiline>
+    </comments> -->
+</syntax>

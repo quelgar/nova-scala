@@ -1,0 +1,24 @@
+{
+    "identifier": "org.lodea.Scala",
+    "name": "Scala",
+    "organization": "Lachlan O'Dea",
+    "description": "Syntax and LSP support for the Scala language.",
+    "version": "1.0",
+    "categories": ["languages"],
+    
+    "main": "main.js",
+    
+    "entitlements": {
+        "process": true,
+        "filesystem": "readonly"
+    },
+    
+    "config": [
+        {
+            "key": "example.language-server-path",
+            "title": "Language Server Path",
+            "type": "path",
+            "placeholder": "/usr/local/bin/example"
+        }
+    ]
+}

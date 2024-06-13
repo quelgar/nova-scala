@@ -1,0 +1,52 @@
+#!/usr/bin/env -S scala-cli shebang -S 3
+
+import scala.sys.process.*
+
+extension (pb: ProcessBuilder)
+    def !!! : Unit = 
+        val result = pb.!
+        if result == 0 then () else throw new Exception(s"Command failed: $result")
+
+val parserName = "scala"
+
+// val destDir = "build-out"
+val libDir = s"Syntaxes"
+// val includeDir = s"$destDir/include"
+
+def run(scalaTreeSitterDir: String, novaAppDir: String) = 
+    val frameworksPath = s"$novaAppDir/Contents/Frameworks/"
+    val buildFlags = List(
+//        "-mtune=apple_m1",
+//        "-mtune=x86_64",
+        "-arch", "arm64",
+        "-arch", "x86_64",
+        "-mmacosx-version-min=11.0",
+        s"-I$scalaTreeSitterDir/src/"
+    )
+    val cFlags = "-O3" :: buildFlags
+    val ldFlags = s"-F$frameworksPath" ::
+        "-framework" :: "SyntaxKit" :: 
+        // "-rpath" :: "@loader_path/../Frameworks" ::
+        "-dynamiclib" ::
+        "-Wl,-install_name,$libDir/libtree-sitter-$parserName.dylib,-rpath,@executable_path/../Frameworks" ::
+        buildFlags
+    val compileCmd = List("cc") ++ ldFlags ++
+        List(
+            s"$scalaTreeSitterDir/src/parser.c",
+            s"$scalaTreeSitterDir/src/scanner.c",
+            "-o", s"$libDir/libtree-sitter-$parserName.dylib"
+        )
+//    List("mkdir", "-p", s"$includeDir/tree_sitter").!!!
+    List("mkdir", "-p", s"$libDir").!!!
+//    List("cp", s"$scalaTreeSitterDir/src/tree_sitter/parser.h", s"$includeDir/tree_sitter/").!!!
+    println(s"Running: $compileCmd")
+    compileCmd.!!!
+    
+val novaExtDir = "/Applications/Nova.app"
+
+args.toList match
+    case scalaTreeSitterDir :: Nil =>
+        run(scalaTreeSitterDir, novaExtDir)
+    case _ =>
+        println("Argument required: the path to the tree-sitter-scala source")
+ 
