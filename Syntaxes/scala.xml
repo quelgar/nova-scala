@@ -6,6 +6,7 @@
     </meta>
     <tree-sitter>
         <highlights />
+        <injections/>
     </tree-sitter>
     <scriptable shebang="##!/usr/bin/env -S scala-cli shebang" />
     <detectors>

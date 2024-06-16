@@ -15,10 +15,16 @@
     
     "config": [
         {
-            "key": "example.language-server-path",
-            "title": "Language Server Path",
+            "key": "scala.language-server-path",
+            "title": "Path to metals executable (defaults to Coursier location)",
             "type": "path",
-            "placeholder": "/usr/local/bin/example"
+            "placeholder": "~/Library/Application Support/Coursier/bin/metals"
+        },
+        {
+            "key": "scala.java-home",
+            "title": "Java home path (defaults to $JAVA_HOME)",
+            "type": "path",
+            "placeholder": "/Library/Java/JavaVirtualMachines/openjdk-22.jdk/Contents/Home"
         }
     ]
 }

@@ -1,9 +1,23 @@
 
 var langserver = null;
 
+const configKeyMetalsPath = 'scala.language-server-path';
+const configKeyJavaHome = 'scala.java-home';
+
 exports.activate = function() {
     // Do work when the extension is activated
-    langserver = new ExampleLanguageServer();
+    const metalsPath = nova.config.get(configKeyMetalsPath);
+    const javaHome = nova.config.get(configKeyJavaHome);
+    langserver = new ScalaLanguageServer(metalsPath, javaHome);
+    nova.config.onDidChange(configKeyMetalsPath, function (path) {
+        langserver.metalsPath = path;
+        langserver.restart();
+    });
+    nova.config.onDidChange(configKeyJavaHome, function (path) {
+        langserver.javaHome = path;
+        langserver.restart();
+    });
+    langserver.restart();
 }
 
 exports.deactivate = function() {
@@ -15,38 +29,45 @@ exports.deactivate = function() {
 }
 
 
-class ExampleLanguageServer {
-    constructor() {
-        // Observe the configuration setting for the server's location, and restart the server on change
-        nova.config.observe('example.language-server-path', function(path) {
-            this.start(path);
-        }, this);
+class ScalaLanguageServer {
+    constructor(metalsPath, javaHome) {
+        this.metalsPath = metalsPath;
+        this.javaHome = javaHome;
     }
     
     deactivate() {
         this.stop();
     }
     
-    start(path) {
+    restart() {
         if (this.languageClient) {
             this.languageClient.stop();
             nova.subscriptions.remove(this.languageClient);
         }
         
         // Use the default server path
+        var path = this.metalsPath;
         if (!path) {
-            path = '/usr/local/bin/example';
+            path = nova.path.expanduser('~/Library/Application Support/Coursier/bin/metals');
+        }        
+        console.info(`Metals path =  ${path}`);
+        
+        var javaHome = this.javaHome;
+        if (!javaHome) {
+            javaHome = nova.environment['JAVA_HOME'];
         }
+        console.info(`JAVA_HOME = ${javaHome}`);
         
         // Create the client
-        var serverOptions = {
-            path: path
+        const serverOptions = {
+            path: path,
+            args: [`-Dmetals.javaHome=${javaHome}`]
         };
-        var clientOptions = {
+        const clientOptions = {
             // The set of document syntaxes for which the server is valid
             syntaxes: ['scala']
         };
-        var client = new LanguageClient('example-langserver', 'Example Language Server', serverOptions, clientOptions);
+        const client = new LanguageClient('scala-langserver', 'Scala Language Server', serverOptions, clientOptions);
         
         try {
             // Start the client

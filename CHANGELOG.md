@@ -1,3 +1,7 @@
-## Version 1.0
+## Version 0.1
 
-Initial release
+Initial beta release.
+
+* Very basic syntax highlighting.
+* LSP via Metals works
+
