@@ -3,7 +3,7 @@
     "name": "Scala",
     "organization": "Lachlan O'Dea",
     "description": "Syntax and LSP support for the Scala language.",
-    "version": "1.0",
+    "version": "0.1",
     "categories": ["languages"],
     
     "main": "main.js",
@@ -12,6 +12,10 @@
         "process": true,
         "filesystem": "readonly"
     },
+    
+    "bugs": "https://github.com/quelgar/nova-scala/issues",
+    "repository": "https://github.com/quelgar/nova-scala",
+    "license": "Apache 2",
     
     "config": [
         {
