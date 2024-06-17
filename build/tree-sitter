@@ -30,17 +30,21 @@ def run(scalaTreeSitterDir: String, novaAppDir: String) =
         "-dynamiclib" ::
         "-Wl,-install_name,$libDir/libtree-sitter-$parserName.dylib,-rpath,@executable_path/../Frameworks" ::
         buildFlags
+    val dylibPath = s"$libDir/libtree-sitter-$parserName.dylib"
     val compileCmd = List("cc") ++ ldFlags ++
         List(
             s"$scalaTreeSitterDir/src/parser.c",
             s"$scalaTreeSitterDir/src/scanner.c",
-            "-o", s"$libDir/libtree-sitter-$parserName.dylib"
+            "-o", dylibPath
         )
 //    List("mkdir", "-p", s"$includeDir/tree_sitter").!!!
     List("mkdir", "-p", s"$libDir").!!!
 //    List("cp", s"$scalaTreeSitterDir/src/tree_sitter/parser.h", s"$includeDir/tree_sitter/").!!!
     println(s"Running: $compileCmd")
     compileCmd.!!!
+    
+    //  codesign -s - Syntaxes/libtree-sitter-scala.dylib  
+    List("codesign", "-s", "-", dylibPath).!!!
     
 val novaExtDir = "/Applications/Nova.app"
 

@@ -1,0 +1,11 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "path" : "build\/tree-sitter"
+    }
+  },
+  "arguments" : [
+    "${WorkspaceFolder}\/..\/tree-sitter-scala"
+  ]
+}
